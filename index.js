@@ -26,11 +26,6 @@ app.get('/', function (req, res, next) {
   next();
 });
 
-app.get('/login', function (req, res, next) {
-  res.render('login');
-  next();
-});
-
 app.post('/save', function (req, res, next) {
 
   var JSONStore = require('json-store');
@@ -59,9 +54,25 @@ app.post('/save', function (req, res, next) {
   next();
 });
 
-app.get('/send', function (req, res, next) {
-  res.render('send');
-  next();
+app.get('/login', secretSanta.ensureLoggedIn, function (req, res) {
+  res.render('login');
+});
+
+app.post('/login', secretSanta.ensureLoggedIn, function (req, res, next) {
+  if (req.param('password') === 'plop') { //TODO
+    secretSanta.initSession(req, res);
+    res.redirect('/admin');
+    next();
+  }
+  else {
+    res.render('login', {
+      error: 'Incorrect password'
+    })
+  }
+});
+
+app.get('/admin', secretSanta.ensureLoggedIn, function (req, res) {
+  res.render('admin');
 });
 
 

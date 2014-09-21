@@ -1,4 +1,5 @@
 {
   "name": "Secret Santa %y",
-  "password": false
+  "signup-password": false,
+  "admin-password": "plop"
 }
