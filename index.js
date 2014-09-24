@@ -72,11 +72,22 @@ app.post('/login', secretSanta.ensureLoggedIn, function (req, res, next) {
 });
 
 app.get('/admin', secretSanta.ensureLoggedIn, function (req, res) {
-  res.render('admin');
+  res.render('admin', {
+    emailsSent: false,
+    subscribers: []
+  });
+});
+
+app.post('/admin', secretSanta.ensureLoggedIn, function (req, res) {
+  secretSanta.sendEmails();
+  res.render('admin', {
+    emailsSent: true,
+    subscribers: []
+  });
 });
 
 
 
-var server = app.listen(3000, function () {
+var server = app.listen(process.env.PORT, process.env.IP, function () {
   console.log('Listening on port %d', server.address().port);
 });

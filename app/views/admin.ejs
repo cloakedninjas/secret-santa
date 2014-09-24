@@ -1,4 +1,21 @@
 <% layout('layout'); %>
 <h2>Admin</h2>
 
-<p>asdasdasd</p>
+<h3>People signed up</h3>
+
+<ul>
+<% for(var i = 0; i < subscribers.length; i++) {%>
+   <li><%= subscribers[i].name %></li>
+<% } %>
+</ul>
+
+<% if (emailsSent) { %>
+<p>Emails have been sent! Hope you get something good!</p>
+<% } else { %>
+<form method="post" action="/admin">
+    <h3>Run</h3>
+    <p>Click the following button to send out the email!</p>
+
+    <input type="submit" class="button" value="Send" />
+</form>
+<% } %>
