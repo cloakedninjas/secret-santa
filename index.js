@@ -28,26 +28,7 @@ app.get('/', function (req, res, next) {
 
 app.post('/save', function (req, res, next) {
 
-  var JSONStore = require('json-store');
-  var db = JSONStore(__dirname + '/data/data.json');
-
-  var key = 'registrants';
-  var current = db.get(key);
-
-  if (current === undefined) {
-    current = [];
-  }
-
-  var newUser = {
-    foo: 'bar',
-    name: req.param('name'),
-    email: req.param('email'),
-    colour: req.param('colour'),
-    animal: req.param('animal')
-  };
-
-  current.push(newUser);
-  db.set(key, current);
+  secretSanta.addSubscriber(req);
 
   res.render('registered');
 
@@ -74,7 +55,7 @@ app.post('/login', secretSanta.ensureLoggedIn, function (req, res, next) {
 app.get('/admin', secretSanta.ensureLoggedIn, function (req, res) {
   res.render('admin', {
     emailsSent: false,
-    subscribers: []
+    subscribers: secretSanta.getSubscribers()
   });
 });
 
@@ -86,8 +67,8 @@ app.post('/admin', secretSanta.ensureLoggedIn, function (req, res) {
   });
 });
 
+var port = 3000; //process.env.PORT
 
-
-var server = app.listen(process.env.PORT, process.env.IP, function () {
+var server = app.listen(port, process.env.IP, function () {
   console.log('Listening on port %d', server.address().port);
 });
