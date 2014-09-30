@@ -1,4 +1,21 @@
+body {
+  background: #FBF0E3 url(/images/pusheen_tree.gif) bottom right no-repeat;
+  color: #896857;
+}
+
 article {
   width: 960px;
   margin: 0 auto;
+}
+
+h1 {
+  color: #624549;
+}
+
+.button {
+  background: #C74E45;
+}
+
+.button:hover {
+  background: #0C1C50;
 }

@@ -141,5 +141,4 @@ SecretSanta.prototype.shuffle = function (array) {
   return array;
 };
 
-
 module.exports = new SecretSanta();

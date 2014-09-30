@@ -21,19 +21,18 @@ app.use(session({
 
 // routes
 
-app.get('/', function (req, res, next) {
-  res.render('index');
-
-  next();
+app.get('/', function (req, res) {
+  res.render('index', {
+    title: secretSanta.fetchConfig()['title'],
+    deadline: secretSanta.fetchConfig()['deadline'],
+    spendLimit: secretSanta.fetchConfig()['spend-limit']
+  });
 });
 
 app.post('/save', function (req, res, next) {
-
   secretSanta.addSubscriber(req);
 
   res.render('registered');
-
-  next();
 });
 
 app.get('/login', secretSanta.ensureLoggedIn, function (req, res) {
