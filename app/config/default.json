@@ -1,5 +1,12 @@
 {
   "name": "Secret Santa %y",
   "signup-password": false,
-  "admin-password": "plop"
+  "admin-password": "xxx",
+
+  "email-server": {
+    "type": "mailgun",
+    "api-key": "xxxx",
+    "from-address": "santa@thenorthpole.com"
+  }
+
 }
