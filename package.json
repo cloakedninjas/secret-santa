@@ -1,12 +1,19 @@
 {
   "name": "secret-santa",
-  "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "1.0.0",
+  "description": "A web-based secret santa application to collect participants, shuffle and email each user with their chosen secret santa",
+  "main": "./index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": {
+    "name": "Daniel Jackson",
+    "email": "daniel@cloakedninjas.co.uk"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cloakedninjas/secret-santa.git"
+  },
   "license": "ISC",
   "dependencies": {
     "body-parser": "~1.8.1",
