@@ -12,9 +12,9 @@ app.set('views', __dirname + '/app/views');
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser('xhyuujj1456'));
+app.use(cookieParser(secretSanta.fetchConfig()['cookie-secret']));
 app.use(session({
-  secret: 'all glory to keyboard cat',
+  secret: secretSanta.fetchConfig()['session-secret'],
   resave: true,
   saveUninitialized: false
 }));
@@ -29,7 +29,7 @@ app.get('/', function (req, res) {
   });
 });
 
-app.post('/save', function (req, res, next) {
+app.post('/save', function (req, res) {
   secretSanta.addSubscriber(req);
 
   res.render('registered');
@@ -40,7 +40,7 @@ app.get('/login', secretSanta.ensureLoggedIn, function (req, res) {
 });
 
 app.post('/login', secretSanta.ensureLoggedIn, function (req, res, next) {
-  if (req.param('password') === 'plop') { //TODO
+  if (req.param('password') === secretSanta.fetchConfig()['admin-password']) {
     secretSanta.initSession(req, res);
     res.redirect('/admin');
     next();
