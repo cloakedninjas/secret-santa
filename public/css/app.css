@@ -6,16 +6,54 @@ body {
 article {
   width: 960px;
   margin: 0 auto;
+  padding: 32px 0 0;
 }
 
 h1 {
-  color: #624549;
+  margin: 0 0 24px;
+  color: #4D2A0A;
 }
 
-.button {
+form {
+  margin: 40px 0 0;
+}
+
+input[type=text], input[type=email] {
+  margin: 0 0 24px;
+  border: 2px #4D2A0A solid;
+  border-radius: 5px;
+}
+
+input[type=text]:focus, input[type=email]:focus {
+  border-color: #4D2A0A;
+  box-shadow: 0 0 5px #4D2A0A;
+}
+
+input[type=submit] {
   background: #C74E45;
+  border-radius: 5px;
 }
 
 .button:hover {
   background: #0C1C50;
+}
+
+::-webkit-input-placeholder {
+  color: #896857;
+  opacity: 0.8;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  color: #896857;
+  opacity: 0.8;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+  color: #896857;
+  opacity: 0.8;
+}
+
+:-ms-input-placeholder {
+  color: #896857;
+  opacity: 0.8;
 }
