@@ -44,16 +44,16 @@ If you use Mailgun, only `api-key` is required.
 
 If you choose SMTP, you need to pass in config options to Nodemailer (http://nodemailer.com) via `options`. Here is a sample config:
 
-  "email-server": {
-    "type": "SMTP",
-    "options": {
-      "service": "Gmail",
-      "auth": {
-          "user": "gmail.user@gmail.com",
-          "pass": "userpass"
+    "email-server": {
+      "type": "SMTP",
+      "options": {
+        "service": "Gmail",
+        "auth": {
+            "user": "gmail.user@gmail.com",
+            "pass": "userpass"
+        }
       }
     }
-  }
 
 **cookie-secret**
 
