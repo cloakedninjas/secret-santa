@@ -49,7 +49,8 @@ SecretSanta.prototype.addSubscriber = function (req) {
     name: req.param('name'),
     email: req.param('email'),
     colour: req.param('colour'),
-    animal: req.param('animal')
+    animal: req.param('animal'),
+    idea:  req.param('idea')
   });
   db.set(this.DB_KEY, currentSubscribers);
 };
@@ -60,7 +61,8 @@ SecretSanta.prototype.sendEmails = function () {
   var messageBody = 'Hi <%=name%>!\n\n';
   messageBody += 'Here is your Secret Santa drawing:\n\n';
   messageBody += 'You have been given <%=recipient%>. They like <%=colour%> things and prefer <%=animal%>.\n';
-  messageBody += 'They would adore a <%=colour%> <%=animal%> - see if you can get one for under <%=spendLimit%>\n\n';
+  messageBody += 'They suggested: <%=idea%> as a potential gift.\n\n';
+  messageBody += 'Remember the deadline is <%=deadline%> and the spend limit is <%=spendLimit%>\n\n';
   messageBody += 'Happy shopping, and have a Merry Christmas!!';
 
   var subject = 'You Secret Santa drawing';
@@ -84,7 +86,9 @@ SecretSanta.prototype.sendEmails = function () {
       recipient: recipient.name,
       colour: recipient.colour,
       animal: recipient.animal,
-      spendLimit: 100
+      idea: recipient.idea,
+      deadline: this.fetchConfig()['deadline'],
+      spendLimit: this.fetchConfig()['spend-limit']
     });
 
     this.sendEmail(subscriber.email, subject, messageBody)
