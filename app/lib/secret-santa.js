@@ -1,4 +1,5 @@
 var SecretSanta = function (opts) {
+  this.defaultConfigFile = __dirname + '/../config/default.json';
   this.configFile = __dirname + '/../config/config.json';
   this.database = __dirname + '/../../data/storage.json';
 };
@@ -7,6 +8,96 @@ SecretSanta.prototype.DB_KEY = 'subscribers';
 
 SecretSanta.prototype.fetchConfig = function () {
   return require(this.configFile);
+};
+
+SecretSanta.prototype.configExists = function () {
+  var fs = require('fs');
+
+  return fs.existsSync(this.configFile);
+};
+
+SecretSanta.prototype.runInstall = function () {
+  var prompt = require('prompt');
+  var self = this;
+
+  console.log('Running installation...');
+  console.log('Default values appear in brackets');
+
+  prompt.message = ">";
+  prompt.delimiter = " ";
+
+  prompt.start();
+
+  prompt.get([
+    {
+      name: 'title',
+      description: 'Title text (Secret Santa)'
+    },
+    {
+      name: 'admin-password',
+      description: 'Password to access admin area',
+      required: true
+    },
+    {
+      name: 'signup-password',
+      description: 'Password for guests to  sign up. Leave blank for no password'
+    },
+    {
+      name: 'deadline',
+      description: 'The deadline for signing up'
+    },
+    {
+      name: 'spend-limit',
+      description: 'The spend limit'
+    },
+    {
+      name: 'email-type',
+      description: 'Which email service should be used? (smtp or mailgun)'
+    }
+  ], function (err, result) {
+    if (result['email-type'] === 'smtp') {
+      console.log('Please manually enter SMTP details into the config.json when done');
+    }
+    else {
+      prompt.get([
+        {
+          name: 'api-key',
+          description: 'Mailgun API key'
+        }
+      ], function (err, mailgunResult) {
+        self.writeConfig(result, mailgunResult);
+      });
+    }
+  });
+};
+
+SecretSanta.prototype.writeConfig = function (mainConfig, emailConfig) {
+  var config = require(this.defaultConfigFile);
+  var fs = require('fs');
+  var configFields = ['title', 'signup-password', 'admin-password', 'deadline', 'spend-limit'];
+  var configFieldName;
+
+  for (var key in configFields) {
+    configFieldName = configFields[key]
+    config[configFieldName] = mainConfig[configFieldName];
+  }
+
+  if (config['signup-password'] === '') {
+    config['signup-password'] = false;
+  }
+
+  if (config.aasd === 'smtp') {
+    config['email-server'].type = 'smtp';
+  }
+  else {
+    config['email-server'].type = 'mailgun';
+    config['email-server']['api-key'] = emailConfig['api-key'];
+  }
+
+  config['cookie-secret'] = this.generateRandomPassword();
+  config['session-secret'] = this.generateRandomPassword();
+
+  fs.writeFileSync(this.configFile, JSON.stringify(config));
 };
 
 SecretSanta.prototype.ensureLoggedIn = function (req, res, next) {
@@ -143,6 +234,21 @@ SecretSanta.prototype.shuffle = function (array) {
   }
 
   return array;
+};
+
+SecretSanta.prototype.generateRandomPassword = function (len) {
+  if (len === undefined) {
+    len = 16;
+  }
+
+  var minCharCode = 65, maxCharCode = 90, password = '', charCode, i;
+
+  for (i = 0; i < len; i++) {
+    charCode = Math.floor(Math.random()*(maxCharCode - minCharCode + 1) + minCharCode);
+    password += String.fromCharCode(charCode);
+  }
+
+  return password;
 };
 
 module.exports = new SecretSanta();

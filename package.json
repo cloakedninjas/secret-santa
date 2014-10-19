@@ -24,7 +24,8 @@
     "express": "^4.9.0",
     "express-session": "~1.8.2",
     "json-store": "0.0.1",
-    "mailgun": "~0.5.0"
+    "mailgun": "~0.5.0",
+    "prompt": "^0.2.14"
   },
   "devDependencies": {
     "jshint": "^2.5.5"
