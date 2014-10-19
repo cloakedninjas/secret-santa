@@ -2,7 +2,7 @@
   "name": "secret-santa",
   "version": "1.0.0",
   "description": "A web-based secret santa application to collect participants, shuffle and email each user with their chosen secret santa",
-  "main": "./index.js",
+  "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
