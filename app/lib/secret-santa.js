@@ -187,7 +187,28 @@ SecretSanta.prototype.sendEmails = function () {
 };
 
 SecretSanta.prototype.sendEmail = function (to, subject, messageBody) {
-  if (this.fetchConfig()['email-server'] === 'mailgun') {
+
+  var nodemailer = require('nodemailer');
+
+  var transporter = nodemailer.createTransport(this.fetchConfig()['email-server']);
+
+  var mailOptions = {
+    from: 'Santa Claus<santa@thenorthpole.com>',
+    to: to,
+    subject: subject,
+    text: messageBody
+  };
+
+  transporter.sendMail(mailOptions, function (error, info){
+    if(error){
+      console.log(error);
+    }
+    else {
+      console.log('Message sent: ' + info.response);
+    }
+  });
+
+  /*if (this.fetchConfig()['email-server'] === 'mailgun') {
     var Mailgun = require('mailgun').Mailgun;
     var mg = new Mailgun(this.fetchConfig()['email-server']['api-key']);
 
@@ -208,7 +229,7 @@ SecretSanta.prototype.sendEmail = function (to, subject, messageBody) {
         console.log(error);
       }
     });
-  }
+  }*/
 };
 
 /**
