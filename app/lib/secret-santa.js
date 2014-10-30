@@ -182,7 +182,7 @@ SecretSanta.prototype.sendEmails = function () {
       spendLimit: this.fetchConfig()['spend-limit']
     });
 
-    this.sendEmail(subscriber.email, subject, messageBody);
+    this.sendEmail(subscriber.email, subject, message);
   }
 };
 
