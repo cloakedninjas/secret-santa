@@ -187,7 +187,7 @@ SecretSanta.prototype.sendEmails = function () {
 };
 
 SecretSanta.prototype.sendEmail = function (to, subject, messageBody) {
-  if (this.fetchConfig()['email-server'] === 'mailgun') {
+  if (this.fetchConfig()['email-server']['type'] === 'mailgun') {
     var Mailgun = require('mailgun').Mailgun;
     var mg = new Mailgun(this.fetchConfig()['email-server']['api-key']);
 
