@@ -149,9 +149,9 @@ SecretSanta.prototype.addSubscriber = function (req) {
 SecretSanta.prototype.sendEmails = function () {
   var ejs = require('ejs');
 
-  var messageBody = 'Hi <%=name%>!\n\n';
+  var messageBody = 'Hi <%= name %>!\n\n';
   messageBody += 'Here is your Secret Santa drawing:\n\n';
-  messageBody += 'You have been given <%=recipient%>. They like <%=colour%> things and prefer <%=animal%>.\n';
+  messageBody += 'You have been given <%= recipient %>. They like <%=colour%> things and prefer <%=animal%>.\n';
   messageBody += 'They suggested: <%=idea%> as a potential gift.\n\n';
   messageBody += 'Remember the deadline is <%=deadline%> and the spend limit is <%=spendLimit%>\n\n';
   messageBody += 'Happy shopping, and have a Merry Christmas!!';
@@ -182,7 +182,7 @@ SecretSanta.prototype.sendEmails = function () {
       spendLimit: this.fetchConfig()['spend-limit']
     });
 
-    this.sendEmail(subscriber.email, subject, messageBody)
+    this.sendEmail(subscriber.email, subject, messageBody);
   }
 };
 
