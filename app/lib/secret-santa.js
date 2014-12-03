@@ -1,7 +1,8 @@
 var SecretSanta = function (opts) {
   this.defaultConfigFile = __dirname + '/../config/default.json';
   this.configFile = __dirname + '/../config/config.json';
-  this.database = __dirname + '/../../data/storage.json';
+  this.databaseLocation = __dirname + '/../../data';
+  this.database = this.databaseLocation + '/storage.json';
 };
 
 SecretSanta.prototype.DB_KEY = 'subscribers';
@@ -18,10 +19,16 @@ SecretSanta.prototype.configExists = function () {
 
 SecretSanta.prototype.runInstall = function () {
   var prompt = require('prompt');
+  var fs = require('fs');
   var self = this;
 
   console.log('Running installation...');
-  console.log('Default values appear in brackets');
+
+  console.log('Creating storage...');
+  fs.mkdirSync(this.databaseLocation);
+  fs.writeFileSync(this.database, '');
+
+  console.log('Config options required (Default values appear in brackets)');
 
   prompt.message = ">";
   prompt.delimiter = " ";
@@ -98,6 +105,8 @@ SecretSanta.prototype.writeConfig = function (mainConfig, emailConfig) {
   config['session-secret'] = this.generateRandomPassword();
 
   fs.writeFileSync(this.configFile, JSON.stringify(config));
+
+  console.log('Config file created. Ensure you run bower install for front-end dependencies');
 };
 
 SecretSanta.prototype.ensureLoggedIn = function (req, res, next) {
