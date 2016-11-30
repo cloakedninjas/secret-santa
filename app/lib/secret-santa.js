@@ -165,7 +165,7 @@ SecretSanta.prototype.sendEmails = function () {
   messageBody += 'Remember the deadline is <%=deadline%> and the spend limit is <%=spendLimit%>\n\n';
   messageBody += 'Happy shopping, and have a Merry Christmas!!';
 
-  var subject = 'You Secret Santa drawing';
+  var subject = 'Your Secret Santa drawing';
   var subscriber, recipient, message;
 
   var subscribers = this.getSubscribers();
@@ -202,21 +202,26 @@ SecretSanta.prototype.sendEmail = function (to, subject, messageBody) {
 
     mg.sendText(this.fetchConfig()['email-server']['from-address'], to, subject, messageBody);
   }
-  else if (this.fetchConfig()['email-server'] === 'smtp') {
+  else if (this.fetchConfig()['email-server']['type'] === 'smtp') {
     var nodemailer = require("nodemailer");
+    var transporter = nodemailer.createTransport(this.fetchConfig()['email-server']['options']);
 
-    var smtpTransport = nodemailer.createTransport("SMTP", this.fetchConfig()['email-server']['options']);
-
-    smtpTransport.sendMail({
+    transporter.sendMail({
       from: this.fetchConfig()['email-server']['from-address'],
       to: to,
       subject: subject,
       text: messageBody
-    }, function(error){
+    }, function (error, info) {
       if (error) {
-        console.log(error);
+        console.error(error);
+      }
+      else {
+        console.log('Email sent: ' + info.response);
       }
     });
+  }
+  else {
+    console.error('Unknown email server type:');
   }
 };
 

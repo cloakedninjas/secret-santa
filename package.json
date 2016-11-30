@@ -1,6 +1,6 @@
 {
   "name": "secret-santa",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "description": "A web-based secret santa application to collect participants, shuffle and email each user with their chosen secret santa",
   "main": "",
   "scripts": {
@@ -25,7 +25,7 @@
     "express-session": "~1.8.2",
     "json-store": "0.0.1",
     "mailgun": "~0.5.0",
-    "nodemailer": "^1.3.0",
+    "nodemailer": "^2.6.4",
     "prompt": "^0.2.14"
   },
   "devDependencies": {

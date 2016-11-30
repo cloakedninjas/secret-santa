@@ -2,5 +2,5 @@
 /public/components
 .idea/
 .c9/
-/data/
+/data/storage.json
 /app/config/config.json
