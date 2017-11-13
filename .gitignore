@@ -5,3 +5,4 @@
 /data/storage.json
 /data/recipients.json
 /app/config/config.json
+.DS_Store
