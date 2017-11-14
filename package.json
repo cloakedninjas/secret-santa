@@ -1,6 +1,6 @@
 {
   "name": "secret-santa",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "A web-based secret santa application to collect participants, shuffle and email each user with their chosen secret santa",
   "main": "",
   "scripts": {

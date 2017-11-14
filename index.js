@@ -72,7 +72,7 @@ else {
     });
   });
 
-  var port = 3000; //process.env.PORT
+  var port = process.env.PORT || 3000;
 
   var server = app.listen(port, process.env.IP, function () {
     console.log('Listening on port %d', server.address().port);
