@@ -44,7 +44,7 @@ if (!secretSanta.configExists()) {
   });
 
   app.post('/login', secretSanta.ensureLoggedIn, function (req, res, next) {
-    if (req.param('password') === secretSanta.fetchConfig()['admin-password']) {
+    if (req.body.password === secretSanta.fetchConfig()['admin-password']) {
       secretSanta.initSession(req, res);
       res.redirect('/admin');
       next();

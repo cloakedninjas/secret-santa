@@ -146,11 +146,11 @@ SecretSanta.prototype.addSubscriber = function (req) {
   const currentSubscribers = this.getSubscribers();
 
   currentSubscribers.push({
-    name: req.param('name'),
-    email: req.param('email'),
-    colour: req.param('colour'),
-    animal: req.param('animal'),
-    idea: req.param('idea')
+    name: req.body.name,
+    email: req.body.email,
+    colour: req.body.colour,
+    animal: req.body.animal,
+    idea: req.body.idea
   });
   db.set(this.DB_KEY, currentSubscribers);
 };
