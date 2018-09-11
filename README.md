@@ -7,7 +7,7 @@ The host can then login and send out the emails, one per person, telling each pe
 
 ## Installation
 
-    $ npm install secret-santa
+    $ git clone https://github.com/cloakedninjas/secret-santa.git --depth 1
 
 ## Usage
 
@@ -16,6 +16,7 @@ admin password as well as the default secrets for Session and Cookie storage.
 
 Run the server using:
 
+    $ cd secret-santa
     $ node index.js
 
 ## Config
@@ -45,7 +46,7 @@ If you use Mailgun, only `api-key` is required.
 If you choose SMTP, you need to pass in config options to Nodemailer (http://nodemailer.com) via `options`. Here is a sample config:
 
     "email-server": {
-      "type": "SMTP",
+      "type": "smtp",
       "options": {
         "service": "Gmail",
         "auth": {
