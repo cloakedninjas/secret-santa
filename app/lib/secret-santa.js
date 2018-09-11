@@ -1,11 +1,11 @@
-var SecretSanta = function (opts) {
+function SecretSanta () {
   this.defaultConfigFile = __dirname + '/../config/default.json';
   this.configFile = __dirname + '/../config/config.json';
   this.databaseLocation = __dirname + '/../../data';
   this.database = this.databaseLocation + '/storage.json';
   this.recipientFile = this.databaseLocation + '/recipients.json';
   this.mailTransport = null;
-};
+}
 
 SecretSanta.prototype.DB_KEY = 'subscribers';
 SecretSanta.prototype.OUTPUT_KEY = 'recipients';
@@ -15,15 +15,14 @@ SecretSanta.prototype.fetchConfig = function () {
 };
 
 SecretSanta.prototype.configExists = function () {
-  var fs = require('fs');
+  const fs = require('fs');
 
   return fs.existsSync(this.configFile);
 };
 
 SecretSanta.prototype.runInstall = function () {
-  var prompt = require('prompt');
-  var fs = require('fs');
-  var self = this;
+  const prompt = require('prompt');
+  const fs = require('fs');
 
   console.log('Running installation...');
 
@@ -33,8 +32,8 @@ SecretSanta.prototype.runInstall = function () {
 
   console.log('Config options required (Default values appear in brackets)');
 
-  prompt.message = ">";
-  prompt.delimiter = " ";
+  prompt.message = '>';
+  prompt.delimiter = ' ';
 
   prompt.start();
 
@@ -67,29 +66,30 @@ SecretSanta.prototype.runInstall = function () {
   ], function (err, result) {
     if (result['email-type'] === 'smtp') {
       console.log('Please manually enter SMTP details into the config.json when done');
-    }
-    else {
+    } else {
       prompt.get([
         {
           name: 'api-key',
           description: 'Mailgun API key'
         }
       ], function (err, mailgunResult) {
-        self.writeConfig(result, mailgunResult);
-      });
+        this.writeConfig(result, mailgunResult);
+      }.bind(this));
     }
   });
 };
 
 SecretSanta.prototype.writeConfig = function (mainConfig, emailConfig) {
-  var config = require(this.defaultConfigFile);
-  var fs = require('fs');
-  var configFields = ['title', 'signup-password', 'admin-password', 'deadline', 'spend-limit'];
-  var configFieldName;
+  const config = require(this.defaultConfigFile);
+  const fs = require('fs');
+  const configFields = ['title', 'signup-password', 'admin-password', 'deadline', 'spend-limit'];
+  let configFieldName;
 
-  for (var key in configFields) {
-    configFieldName = configFields[key]
-    config[configFieldName] = mainConfig[configFieldName];
+  for (const key in configFields) {
+    if (configFields.hasOwnProperty(key)) {
+      configFieldName = configFields[key];
+      config[configFieldName] = mainConfig[configFieldName];
+    }
   }
 
   if (config['signup-password'] === '') {
@@ -98,8 +98,7 @@ SecretSanta.prototype.writeConfig = function (mainConfig, emailConfig) {
 
   if (config.aasd === 'smtp') {
     config['email-server'].type = 'smtp';
-  }
-  else {
+  } else {
     config['email-server'].type = 'mailgun';
     config['email-server']['api-key'] = emailConfig['api-key'];
   }
@@ -115,13 +114,11 @@ SecretSanta.prototype.writeConfig = function (mainConfig, emailConfig) {
 SecretSanta.prototype.ensureLoggedIn = function (req, res, next) {
   if (req.session.user && req.url === '/login') {
     res.redirect('/admin');
-  }
-  else if (!req.session.user && req.url !== '/login') {
+  } else if (!req.session.user && req.url !== '/login') {
     req.session.error = 'Access denied!';
     res.status(401);
     res.render('login');
-  }
-  else {
+  } else {
     next();
   }
 };
@@ -131,10 +128,10 @@ SecretSanta.prototype.initSession = function (req) {
 };
 
 SecretSanta.prototype.getSubscribers = function () {
-  var JSONStore = require('json-store');
-  var db = JSONStore(this.database);
+  const jsonStore = require('json-store');
+  const db = jsonStore(this.database);
 
-  var current = db.get(this.DB_KEY);
+  let current = db.get(this.DB_KEY);
 
   if (current === undefined) {
     current = [];
@@ -144,52 +141,54 @@ SecretSanta.prototype.getSubscribers = function () {
 };
 
 SecretSanta.prototype.addSubscriber = function (req) {
-  var JSONStore = require('json-store');
-  var db = JSONStore(this.database);
-  var currentSubscribers = this.getSubscribers();
+  const jsonStore = require('json-store');
+  const db = jsonStore(this.database);
+  const currentSubscribers = this.getSubscribers();
 
   currentSubscribers.push({
     name: req.param('name'),
     email: req.param('email'),
     colour: req.param('colour'),
     animal: req.param('animal'),
-    idea:  req.param('idea')
+    idea: req.param('idea')
   });
   db.set(this.DB_KEY, currentSubscribers);
 };
 
 SecretSanta.prototype.saveRecipientList = function (list) {
-  var JSONStore = require('json-store');
-  var db = JSONStore(this.recipientFile);
+  const jsonStore = require('json-store');
+  const db = jsonStore(this.recipientFile);
 
   db.set(this.OUTPUT_KEY, list);
 };
 
 SecretSanta.prototype.sendEmails = function () {
-  var ejs = require('ejs');
+  const ejs = require('ejs');
 
-  var messageBody = 'Hi <%= name %>!\n\n';
+  let messageBody = 'Hi <%= name %>!\n\n';
   messageBody += 'Here is your Secret Santa drawing:\n\n';
   messageBody += 'You have been given <%= recipient %>. They like <%=colour%> things and prefer <%=animal%>.\n';
   messageBody += 'They suggested: <%=idea%> as a potential gift.\n\n';
   messageBody += 'Remember the deadline is <%=deadline%> and the spend limit is <%=spendLimit%>\n\n';
   messageBody += 'Happy shopping, and have a Merry Christmas!!';
 
-  var subject = 'Your Secret Santa drawing';
-  var subscriber, recipient, message, delay;
+  const subject = 'Your Secret Santa drawing';
+  let subscriber;
+  let recipient;
+  let message;
+  let delay;
 
-  var subscribers = this.getSubscribers();
-  var recipientList = [];
+  let subscribers = this.getSubscribers();
+  const recipientList = [];
   subscribers = this.shuffle(subscribers);
 
-  for (var i = 0; i < subscribers.length; i++) {
+  for (let i = 0; i < subscribers.length; i++) {
     delay = 1000 * i;
     subscriber = subscribers[i];
 
     if (i === subscribers.length - 1) {
       recipient = subscribers[0];
-    }
-    else {
+    } else {
       recipient = subscribers[i + 1];
     }
 
@@ -216,13 +215,12 @@ SecretSanta.prototype.sendEmails = function () {
 
 SecretSanta.prototype.sendEmail = function (to, subject, messageBody) {
   if (this.fetchConfig()['email-server']['type'] === 'mailgun') {
-    var Mailgun = require('mailgun').Mailgun;
-    var mg = new Mailgun(this.fetchConfig()['email-server']['api-key']);
+    const Mailgun = require('mailgun').Mailgun;
+    const mg = new Mailgun(this.fetchConfig()['email-server']['api-key']);
 
     mg.sendText(this.fetchConfig()['email-server']['from-address'], to, subject, messageBody);
-  }
-  else if (this.fetchConfig()['email-server']['type'] === 'smtp') {
-    var nodemailer = require("nodemailer");
+  } else if (this.fetchConfig()['email-server']['type'] === 'smtp') {
+    const nodemailer = require('nodemailer');
 
     if (!this.mailTransport) {
       this.mailTransport = nodemailer.createTransport(this.fetchConfig()['email-server']['options']);
@@ -236,13 +234,11 @@ SecretSanta.prototype.sendEmail = function (to, subject, messageBody) {
     }, function (error, info) {
       if (error) {
         console.error('Error sending to:' + to, error);
-      }
-      else {
+      } else {
         console.log('Email sent: ' + info.response);
       }
     });
-  }
-  else {
+  } else {
     console.error('Unknown email server type:');
   }
 };
@@ -250,10 +246,12 @@ SecretSanta.prototype.sendEmail = function (to, subject, messageBody) {
 /**
  * http://bost.ocks.org/mike/shuffle/
  * @param {Array} array
- * @returns {Array}
+ * @return {Array}
  */
 SecretSanta.prototype.shuffle = function (array) {
-  var counter = array.length, temp, index;
+  let counter = array.length;
+  let temp;
+  let index;
 
   // While there are elements in the array
   while (counter > 0) {
@@ -277,10 +275,14 @@ SecretSanta.prototype.generateRandomPassword = function (len) {
     len = 16;
   }
 
-  var minCharCode = 65, maxCharCode = 90, password = '', charCode, i;
+  const minCharCode = 65;
+  const maxCharCode = 90;
+  let password = '';
+  let charCode;
+  let i;
 
   for (i = 0; i < len; i++) {
-    charCode = Math.floor(Math.random()*(maxCharCode - minCharCode + 1) + minCharCode);
+    charCode = Math.floor(Math.random() * (maxCharCode - minCharCode + 1) + minCharCode);
     password += String.fromCharCode(charCode);
   }
 

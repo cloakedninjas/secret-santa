@@ -1,16 +1,15 @@
-var express = require('express');
-var app = express();
-var engine = require('ejs-locals');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var secretSanta = require('./app/lib/secret-santa');
+const express = require('express');
+const app = express();
+const engine = require('ejs-locals');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const secretSanta = require('./app/lib/secret-santa');
 
 if (!secretSanta.configExists()) {
   console.warn('No config detected...');
   secretSanta.runInstall();
-}
-else {
+} else {
   app.engine('ejs', engine);
   app.set('view engine', 'ejs');
   app.set('views', __dirname + '/app/views');
@@ -49,11 +48,10 @@ else {
       secretSanta.initSession(req, res);
       res.redirect('/admin');
       next();
-    }
-    else {
+    } else {
       res.render('login', {
         error: 'Incorrect password'
-      })
+      });
     }
   });
 
@@ -72,9 +70,9 @@ else {
     });
   });
 
-  var port = process.env.PORT || 3000;
+  const port = process.env.PORT || 3000;
 
-  var server = app.listen(port, process.env.IP, function () {
+  const server = app.listen(port, process.env.IP, function () {
     console.log('Listening on port %d', server.address().port);
   });
 }

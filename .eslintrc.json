@@ -1,0 +1,23 @@
+{
+  "extends": "google",
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "rules": {
+    "comma-dangle": [
+      "error",
+      "never"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "require-jsdoc": ["error", {
+      "require": {
+        "FunctionDeclaration": false
+      }
+    }],
+    "space-before-function-paren": ["error", "always"],
+    "max-len": [1, 120, 2, {"ignoreComments": true}]
+  }
+}
