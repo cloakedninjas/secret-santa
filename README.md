@@ -41,7 +41,13 @@ Your chosen purchase allowance, appear on the top left of the screen
 
 Configure the email server to send out emails to the participants. Can be either an SMTP server or Mailgun (https://mailgun.com)
 
-If you use Mailgun, only `api-key` is required.
+If you use Mailgun, only `api-key` is required:
+
+    "email-server": {
+      "type": "mailgun",
+      "api-key": "key-xyz123",
+      "from-address": "santa@example.com"
+    }
 
 If you choose SMTP, you need to pass in config options to Nodemailer (http://nodemailer.com) via `options`. Here is a sample config:
 

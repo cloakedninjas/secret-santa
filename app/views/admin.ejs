@@ -9,12 +9,22 @@
 <% } %>
 </ul>
 
-<% if (emailsSent) { %>
-<p>Emails have been sent! Hope you get something good!</p>
-<% } else { %>
-<form method="post" action="/admin">
+<% if (alreadySent) { %>
+    <p>It looks like you already tried to send out emails</p>
+<% } %>
+
+<form method="post" action="/admin/create-send">
     <h3>Run</h3>
     <p>Click the following button to send out the email!</p>
+
+    <input type="submit" class="button" value="Send" />
+</form>
+
+<% if (alreadySent) { %>
+<form method="post" action="/admin/re-send">
+    <h3>Re-send only failed</h3>
+
+    <p>Click the following button to attempt re-send to any failed the emails!</p>
 
     <input type="submit" class="button" value="Send" />
 </form>

@@ -57,16 +57,21 @@ if (!secretSanta.configExists()) {
 
   app.get('/admin', secretSanta.ensureLoggedIn, function (req, res) {
     res.render('admin', {
-      emailsSent: false,
       subscribers: secretSanta.getSubscribers()
     });
   });
 
-  app.post('/admin', secretSanta.ensureLoggedIn, function (req, res) {
-    secretSanta.sendEmails();
-    res.render('admin', {
-      emailsSent: true,
-      subscribers: []
+  app.post('/admin/create-send', secretSanta.ensureLoggedIn, function (req, res) {
+    const list = secretSanta.createAndSendEmails();
+    res.render('admin-review-send', {
+      recipients: list
+    });
+  });
+
+  app.post('/admin/re-send', secretSanta.ensureLoggedIn, function (req, res) {
+    const list = secretSanta.resendRecipientList();
+    res.render('admin-review-send', {
+      recipients: list
     });
   });
 

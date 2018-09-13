@@ -1,14 +1,12 @@
-function SecretSanta () {
+function SecretSanta() {
   this.defaultConfigFile = __dirname + '/../config/default.json';
   this.configFile = __dirname + '/../config/config.json';
   this.databaseLocation = __dirname + '/../../data';
   this.database = this.databaseLocation + '/storage.json';
-  this.recipientFile = this.databaseLocation + '/recipients.json';
   this.mailTransport = null;
 }
 
 SecretSanta.prototype.DB_KEY = 'subscribers';
-SecretSanta.prototype.OUTPUT_KEY = 'recipients';
 
 SecretSanta.prototype.fetchConfig = function () {
   return require(this.configFile);
@@ -155,14 +153,55 @@ SecretSanta.prototype.addSubscriber = function (req) {
   db.set(this.DB_KEY, currentSubscribers);
 };
 
-SecretSanta.prototype.saveRecipientList = function (list) {
+SecretSanta.prototype.saveSubscribers = function (list) {
   const jsonStore = require('json-store');
-  const db = jsonStore(this.recipientFile);
+  const db = jsonStore(this.database);
 
-  db.set(this.OUTPUT_KEY, list);
+  db.set(this.DB_KEY, list);
 };
 
-SecretSanta.prototype.sendEmails = function () {
+
+SecretSanta.prototype.createAndSendEmails = function () {
+  const list = this.assignRecipients();
+
+  this.sendEmails(list);
+
+  return list;
+};
+
+SecretSanta.prototype.assignRecipients = function () {
+  let subscribers = this.getSubscribers();
+  let subscriber;
+  let recipient;
+
+  subscribers = this.shuffle(subscribers);
+
+  for (let i = 0; i < subscribers.length; i++) {
+    subscriber = subscribers[i];
+
+    if (i === subscribers.length - 1) {
+      recipient = subscribers[0];
+    } else {
+      recipient = subscribers[i + 1];
+    }
+
+    subscriber.recipient = recipient.email;
+    subscriber.sent = false;
+  }
+
+  this.saveSubscribers(subscribers);
+
+  return subscribers;
+};
+
+SecretSanta.prototype.resendRecipientList = function () {
+  const list = this.getSubscribers();
+  this.sendEmails(list);
+
+  return list;
+};
+
+SecretSanta.prototype.sendEmails = function (recipientList) {
   const ejs = require('ejs');
 
   let messageBody = 'Hi <%= name %>!\n\n';
@@ -174,51 +213,53 @@ SecretSanta.prototype.sendEmails = function () {
 
   const subject = 'Your Secret Santa drawing';
   let subscriber;
-  let recipient;
   let message;
   let delay;
 
-  let subscribers = this.getSubscribers();
-  const recipientList = [];
-  subscribers = this.shuffle(subscribers);
+  for (let i = 0; i < recipientList.length; i++) {
+    subscriber = recipientList[i];
 
-  for (let i = 0; i < subscribers.length; i++) {
-    delay = 1000 * i;
-    subscriber = subscribers[i];
-
-    if (i === subscribers.length - 1) {
-      recipient = subscribers[0];
-    } else {
-      recipient = subscribers[i + 1];
+    if (subscriber.sent) {
+      continue;
     }
 
-    recipientList.push({
-      'person': subscriber.email,
-      'recipient': recipient.email
-    });
+    delay = 1000 * i;
 
-    message = ejs.render(messageBody, {
-      name: subscriber.name,
-      recipient: recipient.name,
-      colour: recipient.colour,
-      animal: recipient.animal,
-      idea: recipient.idea,
-      deadline: this.fetchConfig()['deadline'],
-      spendLimit: this.fetchConfig()['spend-limit']
-    });
+    let recipient = this.findSubscriber(recipientList, subscriber.recipient);
 
-    this.saveRecipientList(recipientList);
+    if (recipient) {
+      message = ejs.render(messageBody, {
+        name: subscriber.name,
+        recipient: recipient.name,
+        colour: recipient.colour,
+        animal: recipient.animal,
+        idea: recipient.idea,
+        deadline: this.fetchConfig()['deadline'],
+        spendLimit: this.fetchConfig()['spend-limit']
+      });
 
-    setTimeout(this.sendEmail.bind(this, subscriber.email, subject, message), delay);
+      setTimeout(this.sendEmail.bind(this, subscriber.email, subject, message), delay);
+    }
   }
 };
 
 SecretSanta.prototype.sendEmail = function (to, subject, messageBody) {
+  let success = false;
+  const subscribers = this.getSubscribers();
+  const subscriber = this.findSubscriber(subscribers, to);
+
   if (this.fetchConfig()['email-server']['type'] === 'mailgun') {
     const Mailgun = require('mailgun').Mailgun;
     const mg = new Mailgun(this.fetchConfig()['email-server']['api-key']);
 
-    mg.sendText(this.fetchConfig()['email-server']['from-address'], to, subject, messageBody);
+    mg.sendText(this.fetchConfig()['email-server']['from-address'], to, subject, messageBody, function (err) {
+      if (err) {
+        console.error('Error sending to:' + to, err);
+      } else {
+        console.log('Email sent: ' + to);
+      }
+      success = !err;
+    });
   } else if (this.fetchConfig()['email-server']['type'] === 'smtp') {
     const nodemailer = require('nodemailer');
 
@@ -234,13 +275,18 @@ SecretSanta.prototype.sendEmail = function (to, subject, messageBody) {
     }, function (error, info) {
       if (error) {
         console.error('Error sending to:' + to, error);
+        success = false;
       } else {
         console.log('Email sent: ' + info.response);
+        success = true;
       }
     });
   } else {
     console.error('Unknown email server type:');
   }
+
+  subscriber.sent = success;
+  this.saveSubscribers(subscribers);
 };
 
 /**
@@ -287,6 +333,14 @@ SecretSanta.prototype.generateRandomPassword = function (len) {
   }
 
   return password;
+};
+
+SecretSanta.prototype.findSubscriber = function (list, email) {
+  for (let i = 0; i < list.length; i++) {
+    if (list[i].email === email) {
+      return list[i];
+    }
+  }
 };
 
 module.exports = new SecretSanta();
