@@ -7,6 +7,7 @@ function SecretSanta() {
 }
 
 SecretSanta.prototype.DB_KEY = 'subscribers';
+SecretSanta.prototype.SENT = 'sent';
 
 SecretSanta.prototype.fetchConfig = function () {
   return require(this.configFile);
@@ -138,6 +139,20 @@ SecretSanta.prototype.getSubscribers = function () {
   return current;
 };
 
+SecretSanta.prototype.haveEmailsAlreadySent = function () {
+  const jsonStore = require('json-store');
+  const db = jsonStore(this.database);
+
+  return !!db.get(this.SENT);
+};
+
+SecretSanta.prototype.markEmailsAsSent = function () {
+  const jsonStore = require('json-store');
+  const db = jsonStore(this.database);
+
+  db.set(this.SENT, true);
+};
+
 SecretSanta.prototype.addSubscriber = function (req) {
   const jsonStore = require('json-store');
   const db = jsonStore(this.database);
@@ -216,6 +231,8 @@ SecretSanta.prototype.sendEmails = function (recipientList) {
   let message;
   let delay;
 
+  this.markEmailsAsSent();
+
   for (let i = 0; i < recipientList.length; i++) {
     subscriber = recipientList[i];
 
@@ -245,14 +262,22 @@ SecretSanta.prototype.sendEmails = function (recipientList) {
 
 SecretSanta.prototype.sendEmail = function (to, subject, messageBody) {
   let success = false;
+  const config = this.fetchConfig()['email-server'];
   const subscribers = this.getSubscribers();
   const subscriber = this.findSubscriber(subscribers, to);
 
-  if (this.fetchConfig()['email-server']['type'] === 'mailgun') {
-    const Mailgun = require('mailgun').Mailgun;
-    const mg = new Mailgun(this.fetchConfig()['email-server']['api-key']);
+  if (config.type === 'mailgun') {
+    const mailgun = require('mailgun-js')({
+      apiKey: config['api-key'],
+      domain: config.domain
+    });
 
-    mg.sendText(this.fetchConfig()['email-server']['from-address'], to, subject, messageBody, function (err) {
+    mailgun.messages().send({
+      from: 'Secret Santa <' + config['from-address'] + '>',
+      to: to,
+      subject: subject,
+      text: messageBody
+    }, function (err) {
       if (err) {
         console.error('Error sending to:' + to, err);
       } else {
@@ -260,15 +285,15 @@ SecretSanta.prototype.sendEmail = function (to, subject, messageBody) {
       }
       success = !err;
     });
-  } else if (this.fetchConfig()['email-server']['type'] === 'smtp') {
+  } else if (config.type === 'smtp') {
     const nodemailer = require('nodemailer');
 
     if (!this.mailTransport) {
-      this.mailTransport = nodemailer.createTransport(this.fetchConfig()['email-server']['options']);
+      this.mailTransport = nodemailer.createTransport(config['options']);
     }
 
     this.mailTransport.sendMail({
-      from: this.fetchConfig()['email-server']['from-address'],
+      from: config['from-address'],
       to: to,
       subject: subject,
       text: messageBody

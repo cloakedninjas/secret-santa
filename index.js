@@ -57,7 +57,8 @@ if (!secretSanta.configExists()) {
 
   app.get('/admin', secretSanta.ensureLoggedIn, function (req, res) {
     res.render('admin', {
-      subscribers: secretSanta.getSubscribers()
+      subscribers: secretSanta.getSubscribers(),
+      alreadySent: secretSanta.haveEmailsAlreadySent()
     });
   });
 

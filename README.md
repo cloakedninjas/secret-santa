@@ -41,11 +41,12 @@ Your chosen purchase allowance, appear on the top left of the screen
 
 Configure the email server to send out emails to the participants. Can be either an SMTP server or Mailgun (https://mailgun.com)
 
-If you use Mailgun, only `api-key` is required:
+If you use Mailgun, `api-key` and `domain` are required:
 
     "email-server": {
       "type": "mailgun",
-      "api-key": "key-xyz123",
+      "api-key": "key-abc123def456",
+      "domain": "sandboxabc123def456.mailgun.org",
       "from-address": "santa@example.com"
     }
 
