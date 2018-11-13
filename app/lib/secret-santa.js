@@ -26,8 +26,12 @@ SecretSanta.prototype.runInstall = function () {
   console.log('Running installation...');
 
   console.log('Creating storage...');
-  fs.mkdirSync(this.databaseLocation);
-  fs.writeFileSync(this.database, '');
+
+  if (!fs.lstatSync(this.databaseLocation).isDirectory()) {
+    fs.mkdirSync(this.databaseLocation);
+  }
+
+  fs.writeFileSync(this.database, '{}');
 
   console.log('Config options required (Default values appear in brackets)');
 
@@ -64,7 +68,8 @@ SecretSanta.prototype.runInstall = function () {
     }
   ], function (err, result) {
     if (result['email-type'] === 'smtp') {
-      console.log('Please manually enter SMTP details into the config.json when done');
+      this.writeConfig(result);
+      console.log('Please manually enter SMTP details into app/config/config.json when done');
     } else {
       prompt.get([
         {
@@ -72,10 +77,14 @@ SecretSanta.prototype.runInstall = function () {
           description: 'Mailgun API key'
         }
       ], function (err, mailgunResult) {
-        this.writeConfig(result, mailgunResult);
+        if (!err) {
+          this.writeConfig(result, mailgunResult);
+        } else {
+          console.error(err);
+        }
       }.bind(this));
     }
-  });
+  }.bind(this));
 };
 
 SecretSanta.prototype.writeConfig = function (mainConfig, emailConfig) {
@@ -91,11 +100,11 @@ SecretSanta.prototype.writeConfig = function (mainConfig, emailConfig) {
     }
   }
 
-  if (config['signup-password'] === '') {
+  if (mainConfig['signup-password'] === '') {
     config['signup-password'] = false;
   }
 
-  if (config.aasd === 'smtp') {
+  if (mainConfig['email-type'] === 'smtp') {
     config['email-server'].type = 'smtp';
   } else {
     config['email-server'].type = 'mailgun';
@@ -106,8 +115,7 @@ SecretSanta.prototype.writeConfig = function (mainConfig, emailConfig) {
   config['session-secret'] = this.generateRandomPassword();
 
   fs.writeFileSync(this.configFile, JSON.stringify(config));
-
-  console.log('Config file created. Ensure you run bower install for front-end dependencies');
+  console.log('Config file created.');
 };
 
 SecretSanta.prototype.ensureLoggedIn = function (req, res, next) {
