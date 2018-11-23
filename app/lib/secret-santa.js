@@ -314,6 +314,17 @@ SecretSanta.prototype.sendEmail = function (to, subject, messageBody) {
         success = true;
       }
     });
+  } else if (config.type === 'sendgrid') {
+    const sgMail = require('@sendgrid/mail');
+    sgMail.setApiKey(config.options['api-key']);
+
+    sgMail.send({
+      to: to,
+      from: config['from-address'],
+      subject: subject,
+      text: messageBody
+    });
+
   } else {
     console.error('Unknown email server type:');
   }
