@@ -15,16 +15,16 @@
 
 <form method="post" action="/admin/create-send">
     <h3>Run</h3>
-    <p>Click the following button to send out the email!</p>
+    <p>Click the following button to re-send emails!</p>
 
     <input type="submit" class="button" value="Send" />
 </form>
 
 <% if (alreadySent) { %>
 <form method="post" action="/admin/re-send">
-    <h3>Re-send only failed</h3>
+    <h3>Regenerate list and send again</h3>
 
-    <p>Click the following button to attempt re-send to any failed the emails!</p>
+    <p>This will re-shuffle the list of people and send new emails out</p>
 
     <input type="submit" class="button" value="Send" />
 </form>

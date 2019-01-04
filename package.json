@@ -1,10 +1,14 @@
 {
   "name": "secret-santa",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "A web-based secret santa application to collect participants, shuffle and email each user with their chosen secret santa",
   "main": "",
   "scripts": {
-    "lint": "eslint index.js app/**/*.js"
+    "start": "npm run css; node index.js",
+    "css": "node-sass app/scss/styles.scss public/css/app.css --include-path node_modules/foundation-sites/scss --output-style compressed",
+    "test": "mocha app/**/*.test.js",
+    "lint": "eslint index.js app/**/*.js",
+    "init-config": "node index.js --init-config"
   },
   "author": {
     "name": "Daniel Jackson",
@@ -18,18 +22,20 @@
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
     "body-parser": "^1.18.3",
+    "chalk": "^2.4.1",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.6.1",
     "ejs-locals": "^1.0.2",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
-    "json-store": "^1.0.0",
-    "mailgun-js": "^0.21.0",
-    "nodemailer": "^4.7.0",
-    "prompt": "^1.0.0"
+    "foundation-sites": "^6.5.1",
+    "node-sass": "^4.11.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "eslint": "^5.5.0",
-    "eslint-config-google": "^0.10.0"
+    "eslint-config-google": "^0.10.0",
+    "mocha": "^5.2.0",
+    "sinon": "^7.1.1"
   }
 }

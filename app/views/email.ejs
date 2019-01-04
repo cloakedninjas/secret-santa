@@ -1,0 +1,17 @@
+<h1><%= name %>, here is your Secret Santa drawing</h1>
+<p>You have been given <%= recipient %></p>
+<% if (colour || animal) { %>
+<ul>
+    <% if (colour) { %>
+    <li>Their favourite colour is: <%= colour %></li>
+    <% } %>
+    <% if (animal) { %>
+    <li>Their favourite animal is: <%= animal %></li>
+    <% } %>
+</ul>
+<% } %>
+<% if (idea) { %>
+<p>They suggested: <%= idea %> as a potential gift.</p>
+<% } %>
+<p>Remember the deadline is <%= deadline %> and the spend limit is <%= spendLimit %></p>
+<p>Happy shopping, and have a Merry Christmas!!'</p>
