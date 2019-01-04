@@ -1,15 +1,18 @@
 {
   "title": "Node Secret Santa",
-  "signup-password": false,
   "admin-password": "asda",
   "deadline": "Dec 5th",
   "spend-limit": "$50",
 
   "email-server": {
-    "type": "mailgun"
+    "type": "sendgrid",
+    "from-address": "santa@thenorthpole.com",
+
+    "options": {
+      "api-key": "REPLACE_ME"
+    }
   },
 
   "cookie-secret": "xxxdsfsdfyyyzzz111",
   "session-secret": "zzzxsdfsdfxxcccc222"
-
 }

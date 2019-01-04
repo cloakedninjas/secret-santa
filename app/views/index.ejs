@@ -1,37 +1,31 @@
 <% layout('layout'); %>
 <p>Welcome to <%= title %></p>
-<form action="/save" method="post">
-  <div class="row">
-    <div class="small-6 large-6 columns">
-      <div class="row">
-        <input type="text" name="name" placeholder="Your name" required />
-      </div>
+<form action="/save" method="post" class="grid-container">
+    <div class="grid-x grid-padding-x">
+        <div class="medium-6 cell">
+            <input type="text" name="name" placeholder="Your name" required/>
+        </div>
+        <div class="medium-6 cell">
+            <input type="email" name="email" placeholder="Email address" required/>
+        </div>
+        <div class="medium-6 cell">
+            <input type="text" name="colour" placeholder="Your favourite colour"/>
+        </div>
 
-    <div class="row">
-      <input type="email" name="email" placeholder="Email address" required />
-    </div>
+        <div class="medium-6 cell">
+            <input type="text" name="animal" placeholder="Your favourite animal"/>
+        </div>
+        <div class="medium-6 cell">
+            <input type="text" name="idea" placeholder="A gift suggestion"/>
+        </div>
+        <div class="medium-6 cell">
+            <input type="submit" class="button"/>
+        </div>
 
-    <div class="row">
-      <input type="text" name="colour" placeholder="Your favourite colour" />
+        <div class="medium-6 cell">
+            <p>The deadline is : <%= deadline %></p>
+            <p>The spending limit is : <%= spendLimit %></p>
+        </div>
     </div>
-
-    <div class="row">
-      <input type="text" name="animal" placeholder="Your favourite animal" />
-    </div>
-
-    <div class="row">
-      <input type="text" name="idea" placeholder="A gift suggestion" />
-    </div>
-
-    <div class="row">
-      <input type="submit" class="button" />
-    </div>
-
-    </div>
-    <div class="small-6 large-6 columns">
-      <p>The deadline is : <%= deadline %></p>
-      <p>The spending limit is : <%= spendLimit %></p>
-    </div>
-  </div>
 
 </form>

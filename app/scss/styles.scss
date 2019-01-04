@@ -1,10 +1,17 @@
+@import "foundation";
+@include foundation-everything;
+
 body {
   background: #FBF0E3 url(/images/pusheen_tree.gif) bottom right no-repeat;
   color: #896857;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.5;
 }
 
 article {
-  width: 960px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 32px 0 0;
 }
@@ -22,20 +29,20 @@ input[type=text], input[type=email] {
   margin: 0 0 24px;
   border: 2px #4D2A0A solid;
   border-radius: 5px;
+
+  &:focus {
+    border-color: #4D2A0A;
+    box-shadow: 0 0 5px #4D2A0A;
+  }
 }
 
-input[type=text]:focus, input[type=email]:focus {
-  border-color: #4D2A0A;
-  box-shadow: 0 0 5px #4D2A0A;
-}
-
-input[type=submit] {
+.button {
   background: #C74E45;
   border-radius: 5px;
-}
 
-.button:hover {
-  background: #0C1C50;
+  &:hover {
+    background: #0C1C50;
+  }
 }
 
 ::-webkit-input-placeholder {

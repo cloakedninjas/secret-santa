@@ -3,16 +3,4 @@
 
 <p>Emails have been sent! Hope you get something good!</p>
 
-<ul>
-<% for(var i = 0; i < recipients.length; i++) {%>
-   <li><%= recipients[i].name %> <%= recipients[i].sent ? 'Sent' : 'Failed' %></li>
-<% } %>
-</ul>
-
-<form method="post" action="/admin/re-send">
-    <h3>Re-send failed</h3>
-    <p>Click the following button to attempt re-send to any failed the emails!</p>
-
-    <input type="submit" class="button" value="Send" />
-</form>
-
+<a href="/admin" class="button">Back</a>
