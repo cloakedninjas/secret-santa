@@ -1,31 +1,26 @@
 <% layout('layout'); %>
-<p>Welcome to <%= title %></p>
+<% block('page', 'signup-form'); -%>
+<h2>Welcome to <%= title %></h2>
 <form action="/save" method="post" class="grid-container">
-    <div class="grid-x grid-padding-x">
-        <div class="medium-6 cell">
-            <input type="text" name="name" placeholder="Your name" required/>
-        </div>
-        <div class="medium-6 cell">
-            <input type="email" name="email" placeholder="Email address" required/>
-        </div>
-        <div class="medium-6 cell">
-            <input type="text" name="colour" placeholder="Your favourite colour"/>
-        </div>
+    <label for="name">Name</label>
+    <input id="name" type="text" name="name" required/>
 
-        <div class="medium-6 cell">
-            <input type="text" name="animal" placeholder="Your favourite animal"/>
-        </div>
-        <div class="medium-6 cell">
-            <input type="text" name="idea" placeholder="A gift suggestion"/>
-        </div>
-        <div class="medium-6 cell">
-            <input type="submit" class="button"/>
-        </div>
+    <label>Email</label>
+    <input type="email" name="email" required/>
 
-        <div class="medium-6 cell">
-            <p>The deadline is : <%= deadline %></p>
-            <p>The spending limit is : <%= spendLimit %></p>
-        </div>
-    </div>
+    <label>Favourite colour</label>
+    <input type="text" name="colour"/>
 
+    <label>Favourite animal</label>
+    <input type="text" name="animal"/>
+
+    <label>Gift suggestion</label>
+    <input type="text" name="idea"/>
+
+    <input type="submit" class="button" value="Sign up!"/>
 </form>
+
+<div class="notes">
+    <p>The deadline is : <b><%= deadline %></b></p>
+    <p>The spending limit is : <b><%= spendLimit %></b></p>
+</div>
