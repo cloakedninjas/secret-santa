@@ -1,6 +1,6 @@
 {
   "name": "secret-santa",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "A web-based secret santa application to collect participants, shuffle and email each user with their chosen secret santa",
   "main": "",
   "scripts": {
@@ -28,7 +28,6 @@
     "ejs-locals": "^1.0.2",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
-    "foundation-sites": "^6.5.1",
     "node-sass": "^4.11.0"
   },
   "devDependencies": {

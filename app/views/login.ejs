@@ -1,23 +1,11 @@
 <% layout('layout'); %>
+<% block('page', 'login'); -%>
+<h2>Admin login</h2>
 <form action="/login" method="post">
-  <div class="row">
-
-    <div class="small-8 large-6 columns large-centered">
-      <h2>Admin login</h2>
-
-      <div class="row">
-        <label>Password
-          <input type="password" name="password"/>
-          <% if (typeof error !== 'undefined') {%>
-          <small class="error"><%= error %></small>
-          <% }%>
-        </label>
-      </div>
-
-      <div class="row">
-        <input type="submit" class="button" />
-      </div>
-    </div>
-
-  </div>
+  <label>Password</label>
+  <input type="password" name="password"/>
+  <% if (typeof error !== 'undefined') {%>
+  <p class="error"><%= error %></p>
+  <% }%>
+  <input type="submit" class="button" value="Login"/>
 </form>

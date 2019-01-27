@@ -21,7 +21,6 @@ if (!fs.existsSync(configFile) || initConfig) {
     console.warn(chalk.red('No config detected...'));
     console.log('Modify app/config/config.json as needed');
   }
-
 } else {
   require('./app/lib/router');
 }

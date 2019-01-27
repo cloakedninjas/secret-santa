@@ -1,66 +1,158 @@
-@import "foundation";
-@include foundation-everything;
+$bp-inline-form: 411px;
+$bp-split-layout: 769px;
+$primary-colour: #0db138;
+$accent-colour: #a70007;
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
 
 body {
-  background: #FBF0E3 url(/images/pusheen_tree.gif) bottom right no-repeat;
-  color: #896857;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  background: #F4FFF7;
+  color: #000;
+  font-family: 'Quicksand', Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: 1.5;
 }
 
 article {
-  max-width: 960px;
   margin: 0 auto;
-  padding: 32px 0 0;
 }
 
-h1 {
-  margin: 0 0 24px;
-  color: #4D2A0A;
+@media (min-width: $bp-split-layout) {
+  article.signup-form {
+    display: flex;
+    align-items: center;
+
+    header {
+      flex: 1 1 40%;
+    }
+
+    section {
+      flex: 1 1 60%;
+      max-width: 500px;
+      margin-right: 20px;
+    }
+  }
+}
+
+
+.logo {
+  padding: 20px;
+  text-align: center;
+
+  img {
+    max-width: 100%;
+  }
+}
+
+
+h2 {
+  margin: 0;
+  padding: 5px 0;
+  text-align: center;
+  font-size: 1.6em;
+  background: $primary-colour;
+  color: #fff;
 }
 
 form {
-  margin: 40px 0 0;
-}
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  padding: 20px;
+  background: #f0f0f0;
 
-input[type=text], input[type=email] {
-  margin: 0 0 24px;
-  border: 2px #4D2A0A solid;
-  border-radius: 5px;
+  label {
+     flex: 1 1 100%;
 
-  &:focus {
-    border-color: #4D2A0A;
-    box-shadow: 0 0 5px #4D2A0A;
+    @media (min-width: $bp-inline-form) {
+      flex-basis: 20%;
+    }
+  }
+
+  input[type=text], input[type=email] {
+    flex: 1 1 100%;
+    margin: 0 0 24px;
+    padding: 5px 10px;
+    border-width: 0 0 2px 0;
+    border-bottom: 2px #333 solid;
+    font-size: 1.2em;
+    background: none;
+
+    &:focus {
+      border-color: $accent-colour;
+    }
+
+    @media (min-width: $bp-inline-form) {
+      flex-basis: 78%;
+    }
+  }
+
+  .button {
+    flex-basis: 50%;
+    margin: auto;
+    padding: 5px 0;
+    border: 0;
+    font-family: 'Quicksand', Helvetica, Arial, sans-serif;
+    font-size: 1.5em;
+    background: $primary-colour;
+    color: #fff;
+
+    &:hover {
+      background: $accent-colour;
+    }
   }
 }
 
-.button {
-  background: #C74E45;
-  border-radius: 5px;
+.notes {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+}
 
-  &:hover {
-    background: #0C1C50;
+.github-corner {
+  :hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+  }
+
+  svg {
+    display: none;
+
+    @media (min-width: $bp-split-layout) {
+      display: block;
+    }
   }
 }
 
-::-webkit-input-placeholder {
-  color: #896857;
-  opacity: 0.8;
+@keyframes octocat-wave {
+  0%, 100% {
+    transform: rotate(0)
+  }
+  20%, 60% {
+    transform: rotate(-25deg)
+  }
+  40%, 80% {
+    transform: rotate(10deg)
+  }
 }
 
-:-moz-placeholder { /* Firefox 18- */
-  color: #896857;
-  opacity: 0.8;
+article.login .error {
+  flex-basis: 100%;
+  text-align: center;
+  color: $accent-colour;
+  font-weight: bold;
 }
 
-::-moz-placeholder {  /* Firefox 19+ */
-  color: #896857;
-  opacity: 0.8;
-}
-
-:-ms-input-placeholder {
-  color: #896857;
-  opacity: 0.8;
+article.admin form p {
+  flex-basis: 100%;
 }
