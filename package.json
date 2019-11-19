@@ -1,6 +1,6 @@
 {
   "name": "secret-santa",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "A web-based secret santa application to collect participants, shuffle and email each user with their chosen secret santa",
   "main": "",
   "scripts": {
@@ -20,21 +20,21 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@sendgrid/mail": "^6.3.1",
-    "body-parser": "^1.18.3",
-    "chalk": "^2.4.1",
-    "cookie-parser": "^1.4.3",
-    "ejs": "^2.6.1",
+    "@sendgrid/mail": "^6.4.0",
+    "body-parser": "^1.19.0",
+    "chalk": "^2.4.2",
+    "cookie-parser": "^1.4.4",
+    "ejs": "^2.7.3",
     "ejs-locals": "^1.0.2",
-    "express": "^4.16.3",
-    "express-session": "^1.15.6",
-    "node-sass": "^4.11.0"
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "node-sass": "^4.13.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^5.5.0",
+    "eslint": "^5.16.0",
     "eslint-config-google": "^0.10.0",
     "mocha": "^5.2.0",
-    "sinon": "^7.1.1"
+    "sinon": "^7.5.0"
   }
 }
