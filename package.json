@@ -34,7 +34,7 @@
     "chai": "^4.2.0",
     "eslint": "^5.16.0",
     "eslint-config-google": "^0.10.0",
-    "mocha": "^5.2.0",
+    "mocha": "^10.2.0",
     "sinon": "^7.5.0"
   }
 }
